@@ -274,14 +274,10 @@ export default class News extends Component {
     return (
       <div className='container my-3'>
         <div className='row'>
-          {this.abc.map((temp)=>{return <div key={temp.url} className='col my-3'>
-            <NewsItem title={temp.title} description={temp.description} imgurl={temp.urlToImage}/>
+          {this.state.article.map((temp)=>{return <div key={temp.url} className='col my-3'>
+            <NewsItem title={temp.title} description={temp.description} imgurl={temp.urlToImage} url={temp.url}/>
             </div>})}
-            
-            
         </div>
-        
-        
       </div>
     )
   }
