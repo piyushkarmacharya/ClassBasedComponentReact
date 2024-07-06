@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
 import Loading from './Loading';
-
+import PropTypes from 'prop-types';
 export default class News extends Component {
-  
+  static defaultProps={
+    pageSize:8,
+  }
+  static propTypes={
+    pageSize:PropTypes.number,
+  }
   constructor(){
     super();
     this.state={
@@ -15,7 +20,7 @@ export default class News extends Component {
 
   async componentDidMount(){
     this.setState({loading:true});
-    let url=`https://newsapi.org/v2/everything?q=apple&from=2024-07-01&to=2024-07-01&sortBy=popularity&apiKey=b78849dd6768481fb4b0e9b1528efddf&page=1&pageSize=${this.props.pageSize}`;
+    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b78849dd6768481fb4b0e9b1528efddf&page=1&pageSize=${this.props.pageSize}`;
     let result=await fetch(url);
     let data=await result.json();
     this.setState({article:data.articles,totalResults:data.totalResults,loading:false});
@@ -26,8 +31,8 @@ export default class News extends Component {
 
     }else{
       this.setState({loading:true});
-      let url=`https://newsapi.org/v2/everything?q=apple&from=2024-07-01&to=2024-07-01&sortBy=popularity&apiKey=b78849dd6768481fb4b0e9b1528efddf&page=${this.state.page+1}&pageSize=${this.props.pageSize}`;
-    let result=await fetch(url);
+      let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b78849dd6768481fb4b0e9b1528efddf&page=${this.state.page+1}&pageSize=${this.props.pageSize}`;
+      let result=await fetch(url);
     let data=await result.json();
     this.setState({article:data.articles,page:this.state.page+1,loading:false});
     }
@@ -35,7 +40,8 @@ export default class News extends Component {
   }
   handlePrevClick=async ()=>{
     this.setState({loading:true});
-    let url=`https://newsapi.org/v2/everything?q=apple&from=2024-07-01&to=2024-07-01&sortBy=popularity&apiKey=b78849dd6768481fb4b0e9b1528efddf&page=${this.state.page-1}&pageSize=${this.props.pageSize}`;
+    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=b78849dd6768481fb4b0e9b1528efddf&page=${this.state.page+1}&pageSize=${this.props.pageSize}`;
+
     let result=await fetch(url);
     let data=await result.json();
     this.setState({article:data.articles,page:this.state.page-1,loading:false});
@@ -48,7 +54,7 @@ export default class News extends Component {
         {this.state.loading&&<Loading/>}
         {!this.state.loading&&<div className='row'>
           {this.state.article.map((temp)=>{return <div key={count++} className='col my-3 '>
-            <NewsItem title={temp.title} description={temp.description} imgurl={temp.urlToImage} url={temp.url}/>
+            <NewsItem title={temp.title} description={temp.description} imgurl={temp.urlToImage==null?'https://as1.ftcdn.net/v2/jpg/07/14/76/48/1000_F_714764849_go1rZkGEDjVQksxoo7PY2sZCVEOToKmQ.jpg':temp.urlToImage} url={temp.url}/>
             </div>})}
         </div>}
         <div className="d-flex justify-content-between">
